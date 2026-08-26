@@ -14,9 +14,9 @@ PORT = int(os.getenv("PORT", 5000))
 def home():
     return jsonify({
         "status": "success",
-        "message": f"{APP_NAME} is running!",
-        "technology": "Python Flask",
-        "server": "AWS EC2"
+        "messageeeeeeee": f"{APP_NAME} is running!",
+        "technologyeeeeeeeeeeeeee": "Python Flask",
+        "servereeeeeeeeeeeeeee": "AWS EC2"
     })
 
 
