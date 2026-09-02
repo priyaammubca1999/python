@@ -1,13 +1,13 @@
 from flask import Flask, jsonify
 import os
 from dotenv import load_dotenv
+import awsgi
 
 load_dotenv()
 
 app = Flask(__name__)
 
-APP_NAME = os.getenv("APP_NAME", "Python EC2 API")
-PORT = int(os.getenv("PORT", 5000))
+APP_NAME = os.getenv("APP_NAME", "Python Lambda API")
 
 
 @app.route("/")
@@ -16,7 +16,7 @@ def home():
         "status": "success",
         "messagee": f"{APP_NAME} is running!",
         "technologye": "Python Flask",
-        "servere": "AWS EC2"
+        "servere": "AWS Lambda"
     })
 
 
@@ -50,7 +50,10 @@ def get_user(user_id):
         {"id": 3, "name": "David", "role": "Cloud Engineer"}
     ]
 
-    user = next((user for user in users_data if user["id"] == user_id), None)
+    user = next(
+        (user for user in users_data if user["id"] == user_id),
+        None
+    )
 
     if user is None:
         return jsonify({
@@ -64,5 +67,11 @@ def get_user(user_id):
     })
 
 
+# AWS Lambda entry point
+def lambda_handler(event, context):
+    return awsgi.response(app, event, context)
+
+
+# Local development
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=PORT, debug=False)
+    app.run(host="0.0.0.0", port=int(os.getenv("PORT", 5000)))
